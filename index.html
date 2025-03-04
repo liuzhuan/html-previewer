@@ -40,13 +40,34 @@
     <script>
       const editor = document.getElementById('editor');
       const preview = document.getElementById('preview');
+      let isCompositing = false;
 
       editor.addEventListener(
         'input',
         debounce((e) => {
+          if (isCompositing) return;
           preview.srcdoc = e.target.value;
         }, 200)
       );
+
+      editor.addEventListener('compositionstart', handleComposition);
+      editor.addEventListener('compositionupdate', handleComposition);
+      editor.addEventListener('compositionend', handleComposition);
+
+      function handleComposition(e) {
+        switch (e.type) {
+          case 'compositionstart':
+            isCompositing = true;
+            break;
+
+          case 'compositionend':
+            isCompositing = false;
+            break;
+
+          default:
+            break;
+        }
+      }
 
       function debounce(func, delay) {
         let timerId;
