@@ -41,9 +41,25 @@
       const editor = document.getElementById('editor');
       const preview = document.getElementById('preview');
 
-      editor.addEventListener('input', (e) => {
-        preview.srcdoc = e.target.value;
-      });
+      editor.addEventListener(
+        'input',
+        debounce((e) => {
+          preview.srcdoc = e.target.value;
+        }, 200)
+      );
+
+      function debounce(func, delay) {
+        let timerId;
+
+        return function () {
+          const context = this;
+          const args = arguments;
+          clearTimeout(timerId);
+          timerId = setTimeout(function () {
+            func.apply(context, args);
+          }, delay);
+        };
+      }
     </script>
   </body>
 </html>
