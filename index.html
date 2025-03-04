@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Previewer</title>
+    <style>
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+      }
+
+      .flex {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .flex-1 {
+        flex: 1;
+      }
+
+      #editor {
+        resize: none;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="flex">
+      <textarea
+        id="editor"
+        class="flex-1"
+        placeholder="请输入HTML代码"
+      ></textarea>
+      <iframe id="preview" class="flex-1"></iframe>
+    </section>
+
+    <script>
+      const editor = document.getElementById('editor');
+      const preview = document.getElementById('preview');
+
+      editor.addEventListener('input', (e) => {
+        preview.srcdoc = e.target.value;
+      });
+    </script>
+  </body>
+</html>
