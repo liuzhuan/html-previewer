@@ -46,7 +46,7 @@
 
       function init() {
         if (location.hash) {
-          const value = window.atob(location.hash.slice(1));
+          const value = decode(location.hash.slice(1));
           editor.value = preview.srcdoc = value;
         }
       }
@@ -60,8 +60,16 @@
         }, 200)
       );
 
+      function encode(value) {
+        return window.btoa(encodeURIComponent(value));
+      }
+
+      function decode(code) {
+        return decodeURIComponent(window.atob(code));
+      }
+
       function updateHash(value) {
-        location.hash = window.btoa(value);
+        location.hash = encode(value);
       }
 
       editor.addEventListener('compositionstart', handleComposition);
