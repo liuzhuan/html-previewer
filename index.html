@@ -42,13 +42,27 @@
       const preview = document.getElementById('preview');
       let isCompositing = false;
 
+      init();
+
+      function init() {
+        if (location.hash) {
+          const value = window.atob(location.hash.slice(1));
+          editor.value = preview.srcdoc = value;
+        }
+      }
+
       editor.addEventListener(
         'input',
         debounce((e) => {
           if (isCompositing) return;
           preview.srcdoc = e.target.value;
+          updateHash(preview.srcdoc);
         }, 200)
       );
+
+      function updateHash(value) {
+        location.hash = window.btoa(value);
+      }
 
       editor.addEventListener('compositionstart', handleComposition);
       editor.addEventListener('compositionupdate', handleComposition);
