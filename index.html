@@ -18,56 +18,90 @@
         height: 100vh;
       }
 
-      .flex-1 {
+      #editor-wrapper {
         flex: 1;
+        border-right: 1px solid #ccc;
       }
 
-      #editor {
-        resize: none;
+      #preview {
+        flex: 1;
+        border: none;
+      }
+
+      .cm-editor {
+        height: 100%;
       }
     </style>
-  </head>
-  <body>
-    <section class="flex">
-      <textarea
-        id="editor"
-        class="flex-1"
-        placeholder="请输入HTML代码"
-      ></textarea>
-      <iframe id="preview" class="flex-1"></iframe>
-    </section>
 
     <script type="importmap">
       {
         "imports": {
           "codemirror": "https://esm.sh/codemirror@6.0.1",
-          "@codemirror/view": "https://esm.sh/@codemirror/view@6.36.4"
+          "@codemirror/view": "https://esm.sh/@codemirror/view@6.36.4",
+          "@codemirror/lang-html": "https://esm.sh/@codemirror/lang-html@6.4.9"
         }
       }
     </script>
+  </head>
 
-    <script>
-      const editor = document.getElementById('editor');
+  <body>
+    <section class="flex">
+      <div id="editor-wrapper"></div>
+      <iframe id="preview" frameborder="0"></iframe>
+    </section>
+
+    <script type="module">
+      import { basicSetup } from 'codemirror';
+      import { EditorView, placeholder } from '@codemirror/view';
+      import { html } from '@codemirror/lang-html';
+
       const preview = document.getElementById('preview');
-      let isCompositing = false;
+
+      // 监听编辑器内容变化并进行防抖处理
+      const onUpdateHandler = EditorView.updateListener.of((update) => {
+        if (update.docChanged) {
+          const content = update.state.doc.toString();
+          debouncedUpdateContent(content);
+        }
+      });
+
+      const debouncedUpdateContent = debounce((content) => {
+        if (view.composing) return;
+
+        // 更新预览区和 Hash 值
+        preview.srcdoc = content;
+        updateHash(content);
+      }, 300);
+
+      // 初始化编辑器
+      const view = new EditorView({
+        doc: '',
+        parent: document.getElementById('editor-wrapper'),
+        extensions: [
+          basicSetup,
+          html(),
+          onUpdateHandler,
+          placeholder('Input some HTML'),
+        ],
+      });
 
       init();
 
       function init() {
+        // 读取 Hash 值并渲染页面
         if (location.hash) {
           const value = decode(location.hash.slice(1));
-          editor.value = preview.srcdoc = value;
+          preview.srcdoc = value;
+
+          view.dispatch({
+            changes: {
+              from: 0,
+              to: view.state.doc.length,
+              insert: value,
+            },
+          });
         }
       }
-
-      editor.addEventListener(
-        'input',
-        debounce((e) => {
-          if (isCompositing) return;
-          preview.srcdoc = e.target.value;
-          updateHash(preview.srcdoc);
-        }, 200)
-      );
 
       function encode(value) {
         return window.btoa(encodeURIComponent(value));
@@ -79,25 +113,6 @@
 
       function updateHash(value) {
         location.hash = encode(value);
-      }
-
-      editor.addEventListener('compositionstart', handleComposition);
-      editor.addEventListener('compositionupdate', handleComposition);
-      editor.addEventListener('compositionend', handleComposition);
-
-      function handleComposition(e) {
-        switch (e.type) {
-          case 'compositionstart':
-            isCompositing = true;
-            break;
-
-          case 'compositionend':
-            isCompositing = false;
-            break;
-
-          default:
-            break;
-        }
       }
 
       function debounce(func, delay) {
