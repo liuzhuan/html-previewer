@@ -173,12 +173,14 @@
 
       function handlePointerDown(e) {
         eventTracker.style.display = 'block';
+        document.body.style.userSelect = 'none';
         document.addEventListener('pointerup', handlePointerUp);
         document.addEventListener('pointermove', handlePointerMove);
       }
 
       function handlePointerUp(e) {
         eventTracker.style.display = 'none';
+        document.body.style.userSelect = 'auto';
         document.removeEventListener('pointerup', handlePointerUp);
         document.removeEventListener('pointermove', handlePointerMove);
       }
