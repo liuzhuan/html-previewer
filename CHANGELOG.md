@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.4 (2025-03-07)
+
+Make editor area and preview area adjustable.
+
 ## v0.0.3 (2025-03-07)
 
 Add iframe `sandbox` for security purpose.
