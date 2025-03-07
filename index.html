@@ -19,8 +19,19 @@
       }
 
       #editor-wrapper {
-        flex: 1;
+        width: 50%;
         border-right: 1px solid #ccc;
+        position: relative;
+      }
+
+      #dragger {
+        width: 10px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: -5px;
+        background: rgb(255 0 0 / 0.2);
+        cursor: col-resize;
       }
 
       #preview {
@@ -46,7 +57,9 @@
 
   <body>
     <section class="flex">
-      <div id="editor-wrapper"></div>
+      <div id="editor-wrapper">
+        <div id="dragger"></div>
+      </div>
       <iframe
         id="preview"
         frameborder="0"
@@ -130,6 +143,27 @@
             func.apply(context, args);
           }, delay);
         };
+      }
+    </script>
+
+    <script type="module">
+      const dragger = document.getElementById('dragger');
+
+      dragger.addEventListener('pointerdown', handlePointerDown);
+
+      function handlePointerDown(e) {
+        document.addEventListener('pointerup', handlePointerUp);
+        document.addEventListener('pointermove', handlePointerMove);
+      }
+
+      function handlePointerUp(e) {
+        document.removeEventListener('pointerup', handlePointerUp);
+        document.removeEventListener('pointermove', handlePointerMove);
+      }
+
+      function handlePointerMove(e) {
+        const wrapper = document.getElementById('editor-wrapper');
+        wrapper.style.width = e.clientX + 'px';
       }
     </script>
   </body>
