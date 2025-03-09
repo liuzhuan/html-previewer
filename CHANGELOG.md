@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.5 (2025-03-09)
+
+Make responsive layout.
+
 ## v0.0.4 (2025-03-07)
 
 Make editor area and preview area adjustable.
