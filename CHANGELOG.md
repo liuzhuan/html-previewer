@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.7 (2025-03-10)
+
+Support offline usage via PWA.
+
 ## v0.0.6 (2025-03-10)
 
 All the imported modules are bundled into a single js file, under `dist` directory.
