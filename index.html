@@ -7,6 +7,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
     />
     <title>HTML Previewer</title>
+    <link rel="manifest" href="manifest.json" />
     <style>
       html,
       body {
@@ -228,6 +229,21 @@
           wrapper.style.width = e.clientX + 'px';
         }
       }
+    </script>
+
+    <script type="module">
+      async function registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+          try {
+            await navigator.serviceWorker.register('./sw.js');
+            console.log('service worker registers success');
+          } catch (e) {
+            console.error('server worker failed to register', e);
+          }
+        }
+      }
+
+      registerServiceWorker();
     </script>
   </body>
 </html>
