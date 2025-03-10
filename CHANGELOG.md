@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.6 (2025-03-10)
+
+All the imported modules are bundled into a single js file, under `dist` directory.
+
 ## v0.0.5 (2025-03-09)
 
 Make responsive layout.
