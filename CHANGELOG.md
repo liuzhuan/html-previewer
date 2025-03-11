@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.8 (2025-03-11)
+
+Show iframe size when dragging.
+
 ## v0.0.7 (2025-03-10)
 
 Support offline usage via PWA.
